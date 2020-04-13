@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  app:
+    container_name: app
+    hostname: app
+    ports:
+    - 3000:3000
+    build:
+      context: ./
+      dockerfile: ./src
+    depends_on:
+      - redis
+  redis:
+    image: redis
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6379:6379
