@@ -4,7 +4,9 @@
   "description": "",
   "main": ".eslintrc.js",
   "scripts": {
-    "start": "tsc && node dist/main.js"
+    "start": "node dist/main.js",
+    "start:dev": "tsc && node dist/main.js",
+    "build": "tsc"
   },
   "dependencies": {
     "@types/ioredis": "^4.14.9",

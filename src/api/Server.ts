@@ -16,12 +16,13 @@ export class Server {
 
     private async listen() {
         await this.server.listen(this.port);
-        console.info(`HTTP server is listening on ${this.port} port`);
+        if (process.env.DEBUG)
+            console.info(`HTTP server is listening on ${this.port} port`);
     }
 
     public async start() {
         if (this.server) return this.server;
-        this.server = await createServer(this.processRequest);
+        this.server = await createServer(this.processRequest.bind(this));
         await this.listen();
         return this.server;
     }
@@ -47,7 +48,8 @@ export class Server {
                 }
             }
             default: {
-                console.info(`HTTP 404: ${url}`);
+                if (process.env.DEBUG)
+                    console.info(`HTTP 404: ${url}`);
                 response.statusCode = 404;
                 response.end();
             }

@@ -5,9 +5,15 @@ services:
     hostname: app
     ports:
     - 3000:3000
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - PORT=3000
+      - DEBUG=true
+      - POLL_INTERVAL=1000
     build:
       context: ./
-      dockerfile: ./src
+      dockerfile: ./Dockerfile
     depends_on:
       - redis
   redis:
@@ -15,4 +21,5 @@ services:
     container_name: redis
     hostname: redis
     ports:
-      - 6379:6379
+      - 6379
+

@@ -33,16 +33,18 @@ export default class Redis extends MessageBroker {
             .zunionstore(queueName, 2, queueName, tempName)
             .zremrangebyscore(tempName, time - 1, time + 1)
             .exec();
-        console.info(`${time}: ${JSON.stringify(message)} was added to queue`)
+        if (process.env.DEBUG)
+            console.info(`${time}: ${JSON.stringify(message)} was added to queue`)
     }
 
     public async subscribe(queueName: string, handler?: FunctionMessage<Message>) {
+        const pollInterval = process.env.POLL_INTERVAL ? parseInt(process.env.POLL_INTERVAL) : 1000;
         let _this = this;
         if (handler)
             this.setEchoHandler(handler);
         setInterval(() => {
             _this.fetchNewMessages.bind(_this, queueName)();
-        }, 1000)
+        }, pollInterval)
     }
 
     private setEchoHandler(handler: FunctionMessage<Message>) {
@@ -57,7 +59,7 @@ export default class Redis extends MessageBroker {
             .zremrangebyscore(queueName, 0, now)
             .exec((err, results) =>
                 this.processFetchNewMessageResult.bind(this, err, results)());
-        console.info(now, (new Date()).toString());
+        if (process.env.DEBUG) console.info(now, (new Date()).toString());
     }
 
     private async processFetchNewMessageResult(err, results) {
