@@ -17,7 +17,7 @@ In case the server was down when a message should have been printed, it should p
 Run 
 ```
 docker-compose up -d redis
-docker-compose up -d app
+docker-compose up app
 ```
 
 API accepts POST requests on http://localhost:3000/echoAtTime
